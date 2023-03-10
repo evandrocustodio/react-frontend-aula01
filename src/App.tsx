@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import logo from './logo.svg';
 import './App.css';
-import axios from 'axios';
 
 type Aluno = {
   id: number;
   nome: string;
 }
-function App() {
+const API_URL = "http://localhost:8080/";
+const App = () => {
 
-  const API_URL = "http://localhost:8080/";
 
   const api = axios.create({
     baseURL: API_URL,
@@ -59,3 +59,4 @@ function App() {
 }
 
 export default App;
+
