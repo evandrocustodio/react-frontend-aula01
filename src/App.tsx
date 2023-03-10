@@ -1,23 +1,58 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import axios from 'axios';
 
+type Aluno = {
+  id: number;
+  nome: string;
+}
 function App() {
+
+  const API_URL = "http://localhost:8080/";
+
+  const api = axios.create({
+    baseURL: API_URL,
+  });
+
+  const [alunos, setAlunos] = useState<Aluno[]>([]);
+  const [erros, setErros] = useState<boolean>(false);
+
+  useEffect(() => {
+    api
+      .get("/alunos")
+      .then((a) => {
+        setAlunos(a.data);
+      })
+      .catch((e) => {
+        console.log("Não foi possivel carrregar lista de alunos");
+        setErros(true);
+      });
+  }, [api]);
+
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+      <img src={logo} className="App-logo" alt="logo" />
+        <p>LISTAGEM DE ALUNOS </p>
+
+        {erros && <div>Erro de conexão com o backend</div>}
+        <div style={{width: '500px'}}>
+        {alunos &&<div style={{display:'flex', justifyContent:'space-between', width:'100%', color:'yellow'}}>
+                <div>ID</div>
+                <div> NOME</div>
+              </div>}
+        {alunos &&
+          alunos.map((a) => (
+            <>            
+              <div style={{display:'flex', justifyContent:'space-between', width:'100%'}}>
+                <div>{a.id.toString().padStart(5,'0')}</div>
+                <div > {a.nome}</div>
+              </div>
+            </>
+          ))}
+          </div>
       </header>
     </div>
   );
